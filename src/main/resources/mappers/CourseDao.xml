@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace的作用是对sql进行简单的分类管理 -->
+
+<mapper namespace="com.fred.cn.dao.CourseDao">
+	<!-- 开启本Mapper的namespace下的二级缓存 <cache></cache> -->
+	<!-- 开启驼峰规范 -->
+	<insert id="addCourse" parameterType="com.fred.cn.entity.Course">
+		<selectKey keyProperty="courseId" order="BEFORE" resultType="java.lang.Long">
+			select fred_course_seq.nextval from dual
+		</selectKey>
+		insert into fred_course
+		(course_id,
+		course_name,
+		course_type,
+		course_description,
+		create_date,
+		create_by)
+		values
+		(#{courseId,
+		jdbcType =
+		NUMERIC},
+		#{ courseName,
+		jdbcType = VARCHAR},
+		#{ courseType,
+		jdbcType =
+		VARCHAR},
+		#{ courseDescription,
+		jdbcType = VARCHAR},
+		#{ createDate,
+		jdbcType = TIMESTAMP},
+		#{ createBy,
+		jdbcType = VARCHAR})
+	</insert>
+
+	<update id="updateCourse" parameterType="com.fred.cn.entity.Course">
+		update fred_course
+		set
+		course_id =
+		#{courseId, jdbcType = NUMERIC}, course_name = #{
+		courseName, jdbcType =
+		VARCHAR}, course_type = #{ courseType, jdbcType
+		= VARCHAR},
+		course_description = #{ courseDescription, jdbcType =
+		VARCHAR},
+		create_date = #{ createDate, jdbcType = TIMESTAMP}, create_by
+		= #{
+		createBy, jdbcType = VARCHAR} where course_id = #{courseId}
+
+	</update>
+
+	<select id="getCourseById" parameterType="long"
+		resultType="com.fred.cn.entity.Course">
+		select course_id,
+		course_name,
+		course_type,
+		course_description,
+		create_date,
+		create_by
+		from fred_course
+		where
+		course_id = #{courseId}
+
+	</select>
+	<select id="getCourseList" resultType="com.fred.cn.entity.Course">
+		select course_id,
+		course_name,
+		course_type,
+		course_description,
+		create_date,
+		create_by,
+		start_date,
+		end_date
+		from fred_course
+	</select>
+
+	<delete id="deleteCourse">
+		delete from fred_course where course_id = #{courseId}
+	</delete>
+</mapper>
